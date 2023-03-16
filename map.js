@@ -8,7 +8,7 @@ function initialize() {
         new google.maps.LatLng(51.454, -2.603));
     map.fitBounds(defaultBounds);
     var input = /** @type {HTMLInputElement} */(
-      document.getElementById('pac-input')
+      document.getElementById('Address')
     );
     //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
     var searchBox = new google.maps.places.SearchBox(
