@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     const RADIO_GROUP1_SELECTOR = '[fs-hacks-element="panel-type"]';
     const RADIO_GROUP2_SELECTOR = '[fs-hacks-element="panel-amount"]';
     const TOTAL_SELECTOR = '[fs-hacks-element="total-value"]';
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
       hiddenTotalInput.value = formattedSum;
     };
   
-    let sum = 1000;
+    let sum = 1250;
     let sum2 = 0;
     let sum3 = 0;
   
@@ -109,5 +109,19 @@ document.addEventListener('DOMContentLoaded', function () {
       
     
     updateTotals(sum, sum2, sum3, totalValueDiv, totalValueBanner, hiddenTotalInput);
+
+
+    // Get all the checkboxes with the same fs-hacks-element attribute value
+    const checkboxes = document.querySelectorAll('[fs-hacks-element="battery-selector"]');
+    
+    // Add event listeners to each checkbox
+    checkboxes.forEach((checkbox) => {
+      checkbox.addEventListener('change', (event) => {
+        // When any checkbox is checked or unchecked, set all checkboxes to the same state
+        checkboxes.forEach((otherCheckbox) => {
+          otherCheckbox.checked = event.target.checked;
+        });
+      });
+    });
+
   });
-  
