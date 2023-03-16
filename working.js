@@ -1,3 +1,4 @@
+console.log('hello');
 document.addEventListener('DOMContentLoaded', function () {
     const RADIO_GROUP1_SELECTOR = '[fs-hacks-element="panel-type"]';
     const RADIO_GROUP2_SELECTOR = '[fs-hacks-element="panel-amount"]';
@@ -24,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
       hiddenTotalInput.value = formattedSum;
     };
   
-    let sum = 1000;
+    let sum = 5734;
     let sum2 = 0;
     let sum3 = 0;
   
@@ -72,42 +73,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     for (const checkbox of batteryValue) {
+      // find initial totals on page load
       const amountToBeAdded3 = Number(checkbox.getAttribute('add-value'));
-    
+  
+      // if amountToBeAdded is Nan skip
       if (isNaN(amountToBeAdded3)) continue;
-      if (checkbox.checked) {
-        sum3 += amountToBeAdded3;
-        for (const otherCheckbox of batteryValue) {
-          if (otherCheckbox !== checkbox) {
-            otherCheckbox.checked = true;
-          }
-        }
-      }
-    
-      checkbox.addEventListener('input', function () {
+      if (checkbox.checked) sum3 += amountToBeAdded3;
+  
+      // add listener to checkbox
+      checkbox.addEventListener('change', function () {
+        // add or subtract amountToBeAdded given the checkbox state
         if (checkbox.checked) {
           sum3 += amountToBeAdded3;
-          for (const otherCheckbox of batteryValue) {
-            if (otherCheckbox !== checkbox) {
-              otherCheckbox.checked = true;
-              otherCheckbox.classList.add("w--redirected-checked");
-            }
-          }
         } else {
           sum3 -= amountToBeAdded3;
-          for (const otherCheckbox of batteryValue) {
-            if (otherCheckbox !== checkbox) {
-              otherCheckbox.checked = false;
-              otherCheckbox.classList.remove("w--redirected-checked");
-            }
-          }
         }
-    
+  
         updateTotals(sum, sum2, sum3, totalValueDiv, totalValueBanner, hiddenTotalInput);
       });
     }
-      
-    
+
+
+    /*
+    if (batteryValue) {
+        const amountToBeAdded3 = Number(batteryValue.getAttribute('add-value'));
+
+        if (!isNaN(amountToBeAdded3)) {
+            batteryValue.addEventListener('change', function () {
+
+                checkboxes = document.querySelectorAll('[fs-hacks-element="battery-selector"]');
+                for(let i=0, n=checkboxes.length;i<n;i++) {
+                  checkboxes[i].checked = batteryValue.checked;
+                }
+                
+                sum3 = batteryValue.checked ? amountToBeAdded3 : 0;
+
+                updateTotals(sum, sum2, sum3, totalValueDiv, totalValueBanner, hiddenTotalInput);
+            });
+        }
+    }
+    */
+
+
+  
     updateTotals(sum, sum2, sum3, totalValueDiv, totalValueBanner, hiddenTotalInput);
   });
   
