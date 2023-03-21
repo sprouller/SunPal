@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
       hiddenTotalInput.value = formattedSum;
     };
   
-    let sum = 1250;
+    let sum = 0;
     let sum2 = 0;
     let sum3 = 0;
   
