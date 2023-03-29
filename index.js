@@ -5,12 +5,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const TOTAL_SELECTOR_BANNER = '[fs-hacks-element="total-value-banner"]';
     const BATTERY_VALUE = '[fs-hacks-element="battery-selector"]';
     const HIDDEN_INPUT_SELECTOR = '[fs-hacks-element="hidden-total"]';
+    const INSTALLATION_DATE = '[fs-hacks-element="installation-date"]';
     const radiosGroup1 = document.querySelectorAll(RADIO_GROUP1_SELECTOR);
     const radiosGroup2 = document.querySelectorAll(RADIO_GROUP2_SELECTOR);
     const totalValueBanner = document.querySelector(TOTAL_SELECTOR_BANNER);
     const totalValueDiv = document.querySelector(TOTAL_SELECTOR);
     const batteryValue = document.querySelectorAll(BATTERY_VALUE);
     const hiddenTotalInput = document.querySelector(HIDDEN_INPUT_SELECTOR);
+    const installationDate = document.querySelector(INSTALLATION_DATE);
+
+    //Get Installation date
+    const options = { year: "numeric", month: "long", day: "numeric" }
+    const today = new Date();
+    today.setDate(today.getDate() + 14);
+    const installDate = today.toLocaleDateString("en-GB", options);
+    installationDate.innerText = installDate;
   
     if ((radiosGroup1.length === 0 && radiosGroup2.length === 0) || !totalValueDiv || !hiddenTotalInput) return;
   

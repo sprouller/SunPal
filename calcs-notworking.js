@@ -7,14 +7,12 @@
     const INSTALLATION_DATE = '[fs-hacks-element="installation-date"]';
     const MONTHLY_BILL = '[fs-hacks-element="monthly-bill"]';
     const TOTAL_SAVINGS = '[fs-hacks-element="total-savings"]';
-    const BANNER_TOTAL_SAVINGS = '[fs-hacks-element="banner-total-savings"]';
     const MONTHLY_SAVINGS = '[fs-hacks-element="monthly-savings"]';
     const CARBON_SAVED = '[fs-hacks-element="carbon-saved"]';
     const SELF_CONSUMPTION = '[fs-hacks-element="self-consumption"]';
 
     const radiosGroup2 = document.querySelectorAll(RADIO_GROUP2_SELECTOR);
     const totalValueBanner = document.querySelector(TOTAL_SELECTOR_BANNER);
-    const totalSavingsBanner = document.querySelector(BANNER_TOTAL_SAVINGS);
     const totalValueDiv = document.querySelector(TOTAL_SELECTOR);
     const batteryValue = document.querySelectorAll(BATTERY_VALUE);
     const hiddenTotalInput = document.querySelector(HIDDEN_INPUT_SELECTOR);
@@ -32,7 +30,7 @@
     const installDate = today.toLocaleDateString("en-GB", options);
     installationDate.innerText = installDate;
   
-    //if ((radiosGroup2.length === 0) || !totalValueDiv || !hiddenTotalInput) return;
+    if ((radiosGroup2.length === 0) || !totalValueDiv || !hiddenTotalInput) return;
   
     const updateTotals = (sum, sum2, sum3, totalValueDiv, totalValueBanner, hiddenTotalInput) => {
       console.log('update');
@@ -125,43 +123,23 @@
       });
     });
 
+    
+    //Monthly Savings Section
+    const updateSavings = () => {
 
-      //Monthly Savings Section
-      const updateSavings = (mnthVal) => {
+      saved = monthlyBill * 100;
+      monthlySavings = totalSavings/23;
+      carbonSaved = monthlySavings+94;
+      
+      totalSavings.textContent = saved;
 
-        ttlSvd = mnthVal * 100;
-        mnthSvd = ttlSvd/23;
-        crbnSvd = mnthSvd+94;
-
-        const roundMeCurrency = (x) =>{
-          test = new Intl.NumberFormat('en-GB', {
-            style: 'currency',
-            currency: 'GBP',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-          }).format(x);
-          return test;
-      }
-
-      const roundMe = (x) =>{
-        test = new Intl.NumberFormat().format(x);
-        return test;
     }
-        
-        totalSavings.textContent = roundMeCurrency(ttlSvd);
-        monthlySavings.textContent = roundMeCurrency(mnthSvd);
-        carbonSaved.textContent = roundMe(crbnSvd);
-        totalSavingsBanner.textContent = roundMe(ttlSvd);
 
-      }
+    monthlyBill.addEventListener('input', () => {
 
-      monthlyBill.addEventListener('input', () => {
+      const monthlyEnergyCost = monthlyBill.value;
 
-        const mnthVal = monthlyBill.value;
-
-        updateSavings(mnthVal)
-    });
-
-  
+      updateSavings(monthlyEnergyCost)
+  });
 
   });
