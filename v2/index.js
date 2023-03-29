@@ -33,6 +33,11 @@ function initialize() {
             title: place.name,
             position: place.geometry.location
         });
+        markers.push(marker);
+        bounds.extend(place.geometry.location);
+        map.fitBounds(bounds);
+        document.getElementById('Lat').value = marker.getPosition().lat();
+        document.getElementById('Lng').value = marker.getPosition().lng();
         // Add a listener to the marker for the dragend event
         google.maps.event.addListener(marker, 'dragend', function() {
             // Get the updated position of the marker
@@ -41,9 +46,7 @@ function initialize() {
             document.getElementById('Lat').value = newPosition.lat();
             document.getElementById('Lng').value = newPosition.lng();
         });
-        markers.push(marker);
-        bounds.extend(place.geometry.location);
-        map.fitBounds(bounds);
+        
     });
     google.maps.event.addListener(map, 'bounds_changed', function() {
         var bounds = map.getBounds();
