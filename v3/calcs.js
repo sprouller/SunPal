@@ -39,6 +39,7 @@
     //if ((radiosGroup2.length === 0) || !totalValueDiv || !hiddenTotalInput) return;
 
     let aep = 0;
+    let energyCost = 0.34;
 
     const updateTotals = (sum, sum2, sum3, totalValueDiv, totalValueBanner, hiddenTotalInput, aep) => {
 
@@ -48,11 +49,15 @@
       if (isNaN(aep)) {
         aep = 0;
       };
+      
 
       totalValueBanner.innerText = formattedSum;
       hiddenTotalInput.value = formattedSum;
       annualEnergy.innerText = aep;
       carbonSaved.innerText = aep * 0.4;
+
+      //Self Consumption Calcs
+    
     };
   
     let sum = 0;
@@ -119,9 +124,10 @@
           }
         }
     
-        updateTotals(sum, sum2, sum3, totalValueDiv, totalValueBanner, hiddenTotalInput);
+        updateTotals(sum, sum2, sum3, totalValueDiv, totalValueBanner, hiddenTotalInput, aep);
       });
-    }     
+    }
+         
 
     updateTotals(sum, sum2, sum3, totalValueDiv, totalValueBanner, hiddenTotalInput, aep);
 
@@ -170,12 +176,12 @@
 
       }      
 
-      monthlyBill.addEventListener('input', () => {
+    //   monthlyBill.addEventListener('input', () => {
 
-        const mnthVal = monthlyBill.value;
+    //     const mnthVal = monthlyBill.value;
 
-        updateSavings(mnthVal)
-    });
+    //     updateSavings(mnthVal)
+    // });
 
   
 
