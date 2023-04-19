@@ -13,6 +13,8 @@
     const CARBON_SAVED = '[fs-hacks-element="carbon-saved"]';
     const SELF_CONSUMPTION = '[fs-hacks-element="self-consumption"]';
     const ANNUAL_ENERGY = '[fs-hacks-element="annual-energy"]';
+    const COST_BEFORE_SAVINGS = '[fs-hacks-element="costBeforeSavings"]';
+    const COST_AFTER_SAVINGS = '[fs-hacks-element="costAfterSavings"]';
 
     //const panelType = document.querySelectorAll(PANEL_SELECTOR);
     const panelAmount = document.querySelectorAll(PANEL_AMOUNT);
@@ -28,6 +30,13 @@
     const carbonSaved = document.querySelector(CARBON_SAVED);
     const selfConsumption = document.querySelector(SELF_CONSUMPTION);
     const annualEnergy = document.querySelector(ANNUAL_ENERGY);
+    const beforeSavings = document.querySelector(COST_BEFORE_SAVINGS);
+    const afterSavings = document.querySelector(COST_AFTER_SAVINGS);
+
+    // Set finance vals
+    const finR = 10;
+    const finN = 12;
+    const finY = 7;
 
     //Get Installation date
     const options = { year: "numeric", month: "long", day: "numeric" }
@@ -35,7 +44,6 @@
     today.setDate(today.getDate() + 14);
     const installDate = today.toLocaleDateString("en-GB", options);
     installationDate.innerText = installDate;
-
 
     // Set main values
     let multiVal = 0;
@@ -174,15 +182,22 @@ checkboxes.forEach((checkbox) => {
       const tlSav = ((((systemPower * (energyMultiplier)) * timePeriod) * ((consumptionValue * multiVal))) + (sellBackRate * ((1 - (consumptionValue * multiVal)) * systemPower) * timePeriod)) - systemPrice;
       totalSavings.innerText = roundMeCurrency(tlSav);
       totalSavingsBanner.innerText = roundMeCurrency(tlSav);
-      monthlySavings.innerText = roundMeCurrency(tlSav / 360);
+      const monthlySavingsFinal = tlSav / 360;
+      monthlySavings.innerText = roundMeCurrency(monthlySavingsFinal);
 
+      //Finance Savings
+      const finP = tlSav;
+
+      const finMonthlyRepayment = finP * (finR/finN)/(1-(1+(finR/finN)^-(finN * finY)));
+
+      beforeSavings.innerText = roundMeCurrency(finMonthlyRepayment);
+      afterSavings.innerText = roundMeCurrency(finMonthlyRepayment - monthlySavingsFinal);
     }
 
-    // Attach an event listener to each panel
-    panelAmount.forEach(panel => {
-    panel.addEventListener('click', function (event) {
-    
-    // Get the value of the "ts-id" attribute of the clicked panel
+    //Trial click + slider update
+    const sneaky = () => {
+
+          // Get the value of the "ts-id" attribute of the clicked panel
     const panelId = event.target.getAttribute('ts-id');
 
     switch(panelId) {
@@ -229,22 +244,20 @@ checkboxes.forEach((checkbox) => {
 
     }
 
+    }
+    // Attach an event listener to each panel
+    panelAmount.forEach(panel => {
+    panel.addEventListener('click', function (event) {    
+
+      sneaky();
+
     });
   });
 
-
-  monthlyBill.addEventListener('input', () => {
-
-    const mnthVal = monthlyBill.value;
-    //console.log(mnthVal);
-
-
-// pass in consumptionValue 
-// standard is based on std8
-// convert from this using table to other systems
-
-});
+    monthlyBill.addEventListener('input', () => {
+      sneaky();
+    });
 
 updateEverything(valStd8, pwrStd8, cnsmpStd8, multiVal);
 
-  });
+  })
