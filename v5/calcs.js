@@ -38,6 +38,7 @@
 
 
     // Set main values
+    let multiVal = 0;
     let aep = 0;
     let energyCost = 0.34;
     let energyMultiplier = 0.5;
@@ -68,8 +69,6 @@
     let cnsmpPrm10 = 0.603;
     let cnsmpPrm12 = 0.476;
 
-
-
     // Currency rounding function
     const roundMeCurrency = (x) =>{
       const roundedCurrency = new Intl.NumberFormat('en-GB', {
@@ -89,13 +88,56 @@
 
 
 // Consumption multiplier
-const multiplierValue = (x) => {
-  switch(x) {
-    case (x > 50 && x < 61):
-      console.log('successVal');
-      break;
+const multiplierCalc = (x) => {
+  switch(true) {
+    case (x >= 50 && x < 60):
+      multiplerValue = 0.40;
+      selfConsumption.innerText = roundMe(multiplerValue * 100);
+      return multiplerValue;
+    case (x >= 60 && x < 70):
+      multiplerValue = 0.45;
+      selfConsumption.innerText = roundMe(multiplerValue * 100);
+      return multiplerValue;
+    case (x >= 70 && x < 80):
+      multiplerValue = 0.50;
+      selfConsumption.innerText = roundMe(multiplerValue * 100);
+      return multiplerValue;
+    case (x >= 80 && x < 90):
+      multiplerValue = 0.55;
+      selfConsumption.innerText = roundMe(multiplerValue * 100);
+      return multiplerValue;
+    case (x >= 90 && x < 100):
+      multiplerValue = 0.60;
+      selfConsumption.innerText = roundMe(multiplerValue * 100);
+      return multiplerValue;
+    case (x >= 100 && x < 110):
+      multiplerValue = 0.65;
+      selfConsumption.innerText = roundMe(multiplerValue * 100);
+      return multiplerValue;
+    case (x >= 110 && x < 120):
+      multiplerValue = 0.75;
+      selfConsumption.innerText = roundMe(multiplerValue * 100);
+      return multiplerValue;
+    case (x >= 120 && x < 130):
+      multiplerValue = 0.80;
+      selfConsumption.innerText = roundMe(multiplerValue * 100);
+      return multiplerValue;
+    case (x >= 140 && x < 150):
+      multiplerValue = 0.85;
+      selfConsumption.innerText = roundMe(multiplerValue * 100);
+      return multiplerValue;
+    case (x >= 150 && x < 160):
+      multiplerValue = 0.90;
+      selfConsumption.innerText = roundMe(multiplerValue * 100);
+      return multiplerValue;
+    case (x >= 160 && x <= 250):
+      multiplerValue = 1;
+      selfConsumption.innerText = roundMe(multiplerValue * 100);
+      return multiplerValue;
     default:
-      console.log('failure');
+      multiplerValue = 1;
+      selfConsumption.innerText = roundMe(multiplerValue * 100);
+      return multiplerValue;
   }
 }
 
@@ -123,13 +165,13 @@ checkboxes.forEach((checkbox) => {
 });
 
     // Main update function
-    const updateEverything = (systemPrice, systemPower, consumptionValue) => {
+    const updateEverything = (systemPrice, systemPower, consumptionValue, multiVal) => {
       totalPrice.innerText = roundMeCurrency(systemPrice);
       annualEnergy.innerText = roundMe(systemPower);
       carbonSaved.innerText = roundMe(systemPower * 0.4);
 
       // Total Savings Calc
-      const tlSav = ((((systemPower * (energyMultiplier)) * timePeriod) * consumptionValue) + (sellBackRate * ((1 - consumptionValue) * systemPower) * timePeriod)) - systemPrice;
+      const tlSav = ((((systemPower * (energyMultiplier)) * timePeriod) * ((consumptionValue * multiVal))) + (sellBackRate * ((1 - (consumptionValue * multiVal)) * systemPower) * timePeriod)) - systemPrice;
       totalSavings.innerText = roundMeCurrency(tlSav);
       totalSavingsBanner.innerText = roundMeCurrency(tlSav);
       monthlySavings.innerText = roundMeCurrency(tlSav / 360);
@@ -145,32 +187,45 @@ checkboxes.forEach((checkbox) => {
 
     switch(panelId) {
       case "std8":
-        updateEverything(valStd8, pwrStd8, cnsmpStd8);
-        multiplierValue(55);
+        mnthVal = Number(monthlyBill.value);
+        multiVal = multiplierCalc(mnthVal);
+        updateEverything(valStd8, pwrStd8, cnsmpStd8, multiVal);
         break;
 
       case "std10":
-        updateEverything(valStd10, pwrStd10, cnsmpStd10);
+        mnthVal = Number(monthlyBill.value);
+        multiVal = multiplierCalc(mnthVal);
+        updateEverything(valStd10, pwrStd10, cnsmpStd10, multiVal);
         break;
 
       case "std12":
-        updateEverything(valStd12, pwrStd12, cnsmpStd12);
+        mnthVal = Number(monthlyBill.value);
+        multiVal = multiplierCalc(mnthVal);
+        updateEverything(valStd12, pwrStd12, cnsmpStd12, multiVal);
         break;
 
       case "prm8":
-        updateEverything(valPrm8, pwrPrm8, cnsmpPrm8);
+        mnthVal = Number(monthlyBill.value);
+        multiVal = multiplierCalc(mnthVal);
+        updateEverything(valPrm8, pwrPrm8, cnsmpPrm8, multiVal);
         break;
 
       case "prm10":
-        updateEverything(valPrm10, pwrPrm10,cnsmpPrm10);
+        mnthVal = Number(monthlyBill.value);
+        multiVal = multiplierCalc(mnthVal);
+        updateEverything(valPrm10, pwrPrm10,cnsmpPrm10, multiVal);
         break;
 
       case "prm12":
-        updateEverything(valPrm12, pwrPrm12, cnsmpPrm12);
+        mnthVal = Number(monthlyBill.value);
+        multiVal = multiplierCalc(mnthVal);
+        updateEverything(valPrm12, pwrPrm12, cnsmpPrm12, multiVal);
         break;
 
       default:
-        updateEverything(valStd8, pwrStd8, cnsmpStd8);
+        mnthVal = Number(monthlyBill.value);
+        multiVal = multiplierCalc(mnthVal);
+        updateEverything(valStd8, pwrStd8, cnsmpStd8, multiVal);
 
     }
 
@@ -181,7 +236,8 @@ checkboxes.forEach((checkbox) => {
   monthlyBill.addEventListener('input', () => {
 
     const mnthVal = monthlyBill.value;
-    console.log(mnthVal);
+    //console.log(mnthVal);
+
 
 // pass in consumptionValue 
 // standard is based on std8
@@ -189,6 +245,6 @@ checkboxes.forEach((checkbox) => {
 
 });
 
-updateEverything(valStd8, pwrStd8, cnsmpStd8);
+updateEverything(valStd8, pwrStd8, cnsmpStd8, multiVal);
 
   });
