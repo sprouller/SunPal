@@ -176,12 +176,12 @@
 
       }      
 
-    //   monthlyBill.addEventListener('input', () => {
+      monthlyBill.addEventListener('input', () => {
 
-    //     const mnthVal = monthlyBill.value;
+        const mnthVal = monthlyBill.value;
 
-    //     updateSavings(mnthVal)
-    // });
+        updateSavings(mnthVal)
+    });
 
   
 
