@@ -15,6 +15,7 @@
     const ANNUAL_ENERGY = '[fs-hacks-element="annual-energy"]';
     const COST_BEFORE_SAVINGS = '[fs-hacks-element="costBeforeSavings"]';
     const COST_AFTER_SAVINGS = '[fs-hacks-element="costAfterSavings"]';
+    
 
     //const panelType = document.querySelectorAll(PANEL_SELECTOR);
     const panelAmount = document.querySelectorAll(PANEL_AMOUNT);
@@ -149,29 +150,6 @@ const multiplierCalc = (x) => {
   }
 }
 
-
-
-// Get all the checkboxes with the same fs-hacks-element attribute value
-const checkboxes = document.querySelectorAll('[fs-hacks-element="battery-selector"]');
-
-let checkVal = 0;
-
-// Add event listeners to each checkbox
-checkboxes.forEach((checkbox) => {
-  checkbox.addEventListener('change', (event) => {
-    // Check if the current checkbox is checked or not
-    if (event.target.checked) {
-      console.log('on');
-    } else {
-      console.log('off');
-    }
-    // When any checkbox is checked or unchecked, set all checkboxes to the same state
-    checkboxes.forEach((otherCheckbox) => {
-      otherCheckbox.checked = event.target.checked;
-    });
-  });
-});
-
     // Main update function
     const updateEverything = (systemPrice, systemPower, consumptionValue, multiVal) => {
       totalPrice.innerText = roundMeCurrency(systemPrice);
@@ -188,7 +166,7 @@ checkboxes.forEach((checkbox) => {
       //Finance Savings
       const finP = tlSav;
 
-      const finMonthlyRepayment = finP * (finR/finN)/(1-(1+(finR/finN)^-(finN * finY)));
+      const finMonthlyRepayment = finP * ((finR/100)/finN)/(1-(1+((finR/100)/finN)**-(finN * finY)));
 
       beforeSavings.innerText = roundMeCurrency(finMonthlyRepayment);
       afterSavings.innerText = roundMeCurrency(finMonthlyRepayment - monthlySavingsFinal);
@@ -254,8 +232,28 @@ checkboxes.forEach((checkbox) => {
     });
   });
 
+    // Trigger main update on slider input
     monthlyBill.addEventListener('input', () => {
       sneaky();
+    });
+
+
+    let checkVal = 0;
+
+    // Add event listeners to each checkbox
+    batteryValue.forEach((checkbox) => {
+      checkbox.addEventListener('change', (event) => {
+        // Check if the current checkbox is checked or not
+        if (event.target.checked) {
+          console.log('on');
+        } else {
+          console.log('off');
+        }
+        // When any checkbox is checked or unchecked, set all checkboxes to the same state
+        batteryValue.forEach((otherCheckbox) => {
+          otherCheckbox.checked = event.target.checked;
+        });
+      });
     });
 
 updateEverything(valStd8, pwrStd8, cnsmpStd8, multiVal);

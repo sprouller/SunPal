@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const COST_BEFORE_SAVINGS = '[fs-hacks-element="costBeforeSavings"]';
   const COST_AFTER_SAVINGS = '[fs-hacks-element="costAfterSavings"]';
   const SINGLE_BATTERY = '[fs-hacks-element="single-battery"]';
+  const PRICE_ESTIMATE_BREAKDOWN = '[fs-hacks-element="price-estimate-breakdown"]';
+  const VALID_UNTIL = '[fs-hacks-element="valid-until"]';
 
   //const panelType = document.querySelectorAll(PANEL_SELECTOR);
   const panelAmount = document.querySelectorAll(PANEL_AMOUNT);
@@ -33,8 +35,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const annualEnergy = document.querySelector(ANNUAL_ENERGY);
   const beforeSavings = document.querySelector(COST_BEFORE_SAVINGS);
   const afterSavings = document.querySelector(COST_AFTER_SAVINGS);
-  const singleBattery = document.querySelectorAll(SINGLE_BATTERY);
+  const singleBattery = document.querySelector(SINGLE_BATTERY);
+  const priceEstimateBreakdown = document.querySelector(PRICE_ESTIMATE_BREAKDOWN);
+  const validUntil = document.querySelector(VALID_UNTIL);
 
+  // Set init vals
+  const systemPrice = 0;
 
   // Set finance vals
   const finR = 12;
@@ -47,10 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
   today.setDate(today.getDate() + 14);
   const installDate = today.toLocaleDateString("en-GB", options);
   installationDate.innerText = installDate;
-
+  validUntil.innerText = installDate;
 
   //Set battery status
-  let batteryStatus = '';
+  let batteryStatus = false;
+  let finalBatteryPrice = 0;
 
   // Set main values
   let multiVal = 0;
@@ -64,25 +71,25 @@ document.addEventListener('DOMContentLoaded', () => {
   let valStd8 = 7435.30;
   let valStd10 = 10005.13;
   let valStd12 = 12424.96;
-  let valPrm8 = 9115;
+  let valPrm8 = 9115.00;
   let valPrm10 = 11197.50;
-  let valPrm12 = 12830;
+  let valPrm12 = 12830.00;
 
   // Set initial costs with battery
   let valStd8battery = 8382.91;
   let valStd10battery = 10952.74;
   let valStd12battery = 13372.57;
-  let valPrm8battery = 11535;
-  let valPrm10battery = 14752;
-  let valPrm12battery = 17520;
+  let valPrm8battery = 11535.00;
+  let valPrm10battery = 14752.00;
+  let valPrm12battery = 17520.00;
 
   // Set initial power values without battery
-  let pwrStd8 = 3590;
-  let pwrStd10 = 5380;
-  let pwrStd12 = 6730;
-  let pwrPrm8 = 3805;
-  let pwrPrm10 = 5703;
-  let pwrPrm12 = 7134;
+  let pwrStd8 = 3590.00;
+  let pwrStd10 = 5380.00;
+  let pwrStd12 = 6730.00;
+  let pwrPrm8 = 3805.00;
+  let pwrPrm10 = 5703.00;
+  let pwrPrm12 = 7134.00;
 
   //Consumption Conversion
   let cnsmpStd8 = 1;
@@ -166,7 +173,10 @@ const multiplierCalc = (x) => {
 
     // Main update function
     const updateEverything = (systemPrice, systemPower, consumptionValue, multiVal) => {
-      totalPrice.innerText = roundMeCurrency(systemPrice);
+      const newSystemPrice = Number(systemPrice);
+      finalBatteryPrice = Number(singleBattery.value) || 0;
+      const finalCombinedPrice = newSystemPrice + finalBatteryPrice;
+      totalPrice.innerText = roundMeCurrency(finalCombinedPrice);
       annualEnergy.innerText = roundMe(systemPower);
       carbonSaved.innerText = roundMe(systemPower * 0.4);
 
@@ -178,25 +188,50 @@ const multiplierCalc = (x) => {
       monthlySavings.innerText = roundMeCurrency(monthlySavingsFinal);
 
      //Finance Savings
-     const finP = systemPrice;
+     const finP = systemPrice
      const finMonthlyRepayment = finP * ((finR/100)/finN)/(1-((1+(finR/100)/finN))**(-(finN * finY)));
-     beforeSavings.innerText = roundMeCurrency(finMonthlyRepayment);
-     afterSavings.innerText = roundMeCurrency(finMonthlyRepayment - monthlySavingsFinal);
+     const finalBeforeSavings = roundMeCurrency(finMonthlyRepayment);
+     beforeSavings.innerText = finalBeforeSavings;
+     const finalAfterSavings = roundMeCurrency(finMonthlyRepayment - monthlySavingsFinal);
+     afterSavings.innerText = finalAfterSavings;
+     priceEstimateBreakdown.innerText = finalAfterSavings;
     }
 
     //Trial click + slider update
     const sneaky = () => {
 
   // Get the value of the "ts-id" attribute of the clicked panel
-  const panelId = event.target.getAttribute('ts-id');
-  console.log(panelId);
+  let selectedRadioId;
 
-  if (batteryStatus === 'on'){
-    console.log('in business');
-
-  } else {
-    console.log('battery off');
+  for (let i = 0; i < panelAmount.length; i++) {
+    if (panelAmount[i].checked) {
+      panelId = panelAmount[i].getAttribute('ts-id');
+      break;
+    }
   }
+  console.log(panelId);
+  
+
+  if (batteryStatus === true){
+    // set checkbox value based on panel selected
+    if (panelId === 'std8' || panelId === 'std10' || panelId === 'std12') {
+      singleBattery.value =  947.61 ;
+    } else if (panelId === 'prm8') {
+      singleBattery.value = 2402;
+    } else if (panelId === 'prm10') {
+      singleBattery.value = 3555;
+    } else if (panelId === 'prm12') {
+      singleBattery.value = 4690;
+    } else {
+      singleBattery.value = 0;
+    }
+
+  } else if (batteryStatus == false){
+    singleBattery.value = 0;
+  } else {
+    singleBattery.value = 0;
+  }
+
     switch(panelId) {
       case "std8":
         mnthVal = Number(monthlyBill.value);
@@ -256,23 +291,16 @@ const multiplierCalc = (x) => {
     sneaky();
   });
 
-  // Run calcs on checkbox
-  batteryValue.forEach(battery => {
-    battery.addEventListener('input', function () {
-    // Check if the current checkbox is checked or not
-    if (event.target.checked) {
-      batteryStatus = 'on';
+  // Run calcs on slider input
+  singleBattery.addEventListener('change', () => {
+    if (singleBattery.checked) {
+      batteryStatus = true;
     } else {
-      batteryStatus = 'off';
+      batteryStatus = false;
     }
-    // When any checkbox is checked or unchecked, set all checkboxes to the same state
-    batteryValue.forEach((otherCheckbox) => {
-      otherCheckbox.checked = event.target.checked;
-    });
     sneaky();
-  
-    });
   });
+
 
   updateEverything(valStd8, pwrStd8, cnsmpStd8, multiVal);
 

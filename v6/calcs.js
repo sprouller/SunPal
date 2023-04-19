@@ -245,9 +245,10 @@ checkboxes.forEach((checkbox) => {
     }
 
     }
+
     // Attach an event listener to each panel
     panelAmount.forEach(panel => {
-    panel.addEventListener('click', function (event) {    
+    panel.addEventListener('click', function () {    
 
       sneaky();
 
