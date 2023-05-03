@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
   installDayOfMonth.innerText = installDayInMonth;
 
   //Set battery status
-  let batteryStatus = false;
+  let batteryStatus;
   let finalBatteryPrice = 0;
 
   // Set main values
@@ -219,8 +219,8 @@ const multiplierCalc = (x) => {
 
     }
 
-    //Trial click + slider update
-    const sneaky = () => {
+  //Trial click + slider update
+  const sneaky = () => {
 
   // Get the value of the "ts-id" attribute of the clicked panel
   let selectedRadioId;
@@ -232,6 +232,7 @@ const multiplierCalc = (x) => {
     }
   }
   console.log(panelId);
+  console.log(batteryStatus);
 
   if (batteryStatus === true){
     // set checkbox value based on panel selected
@@ -315,7 +316,8 @@ const multiplierCalc = (x) => {
   });
 
   // Run calcs on slider input
-  singleBattery.addEventListener('change', () => {
+  singleBattery.addEventListener('click', () => {
+    console.log('oked');
     if (singleBattery.checked) {
       batteryStatus = true;
     } else {
